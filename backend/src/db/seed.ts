@@ -373,7 +373,7 @@ export async function seed(): Promise<void> {
       category_id: cat3_2_id,
       description: 'ไข่ไก่ 2 ฟองตีฟู ทอดในน้ำมันร้อนจัดจนกรอบฟู ใส่หมูสับ ต้นหอม หอมใหญ่ และพริกสด',
       price: 45.00,
-      image_url: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&auto=format&fit=crop&q=80',
+      image_url: 'https://images.unsplash.com/photo-1629606600908-a51ec6c44fdd?w=600&auto=format&fit=crop&q=80',
       options: [
         { option_name: 'เนื้อสัตว์ในไข่เจียว', option_value: 'หมูสับ', additional_price: 0 },
         { option_name: 'เนื้อสัตว์ในไข่เจียว', option_value: 'กุ้งสับ', additional_price: 20 },
