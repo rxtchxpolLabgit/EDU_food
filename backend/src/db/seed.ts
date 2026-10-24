@@ -39,7 +39,7 @@ export async function seed(): Promise<void> {
     name: 'ข้าวมันไก่ได้เฮียช้าง',
     cuisine_type: 'ข้าวมันไก่',
     description: 'ข้าวมันไก่สูตรไหหลำแท้ ข้าวนุ่มหอมกระเทียม ไก่ต้มตอนเนื้อฉ่ำ ไก่ทอดกรอบไม่อมน้ำมัน พร้อมน้ำจิ้มเต้าเจี้ยวรสเด็ดและน้ำซุปมะนาวดอง',
-    image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop&q=80',
+    image_url: 'https://images.unsplash.com/photo-1741241857887-321f7fbcacf2?w=800&auto=format&fit=crop&q=80',
     opening_time: '07:30',
     closing_time: '16:00',
     is_open: true,
@@ -71,7 +71,7 @@ export async function seed(): Promise<void> {
       category_id: cat1_1_id,
       description: 'ข้าวมันหอมนุ่ม เสิร์ฟพร้อมไก่ตอนเนื้อฉ่ำ แตงกวา น้ำจิ้มสูตรเต้าเจี้ยวพริกขิง และน้ำซุปใสกลมกล่อม',
       price: 50.00,
-      image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+      image_url: 'https://images.unsplash.com/photo-1741241857887-321f7fbcacf2?w=600&auto=format&fit=crop&q=80',
       options: [
         { option_name: 'ส่วนของเนื้อไก่', option_value: 'เนื้อน่องสะโพก (ติดหนัง)', additional_price: 0 },
         { option_name: 'ส่วนของเนื้อไก่', option_value: 'เนื้ออกล้วน (ไม่เอาหนัง)', additional_price: 0 },
@@ -86,7 +86,7 @@ export async function seed(): Promise<void> {
       category_id: cat1_1_id,
       description: 'ไก่ทอดแป้งบางกรอบนอกนุ่มใน ข้าวมันร้อนๆ เสิร์ฟคู่กับน้ำจิ้มไก่หวานและน้ำจิ้มแจ่วรสแซ่บ',
       price: 55.00,
-      image_url: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=600&auto=format&fit=crop&q=80',
+      image_url: 'https://images.unsplash.com/photo-1567030422165-af7ea28f987c?w=600&auto=format&fit=crop&q=80',
       options: [
         { option_name: 'ขนาดจาน', option_value: 'ธรรมดา', additional_price: 0 },
         { option_name: 'ขนาดจาน', option_value: 'พิเศษ', additional_price: 15 },
@@ -326,7 +326,7 @@ export async function seed(): Promise<void> {
       category_id: cat3_1_id,
       description: 'กะเพราโบราณผัดแห้ง พริกแห้งและใบกะเพราป่าแท้ ไม่ใส่ถั่วฝักยาว หอมกลิ่นกระทะไหม้กำลังดี',
       price: 50.00,
-      image_url: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop&q=80',
+      image_url: 'https://images.unsplash.com/photo-1669863329825-6e4e39ce752c?w=600&auto=format&fit=crop&q=80',
       options: standardStirFryOptions,
     },
     {
@@ -334,7 +334,7 @@ export async function seed(): Promise<void> {
       category_id: cat3_1_id,
       description: 'หมูกรอบเนื้อแน่นหนังกรอบฟู ผัดกับคะน้าฮ่องกงยอดอ่อน เต้าเจี้ยวหอม และพริกกระเทียมสด',
       price: 65.00,
-      image_url: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=600&auto=format&fit=crop&q=80',
+      image_url: 'https://images.unsplash.com/photo-1696906594893-e9995c4d7082?w=600&auto=format&fit=crop&q=80',
       options: standardStirFryOptions,
     },
     {
@@ -350,7 +350,7 @@ export async function seed(): Promise<void> {
       category_id: cat3_2_id,
       description: 'ข้าวผัดไข่เมล็ดร่วนสวยสีทอง หอมกลิ่นกระทะ พร้อมผักคะน้า มะเขือเทศ แตงกวาและมะนาวสด',
       price: 50.00,
-      image_url: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&auto=format&fit=crop&q=80',
+      image_url: 'https://images.unsplash.com/photo-1768634003113-42903d7ffe1b?w=600&auto=format&fit=crop&q=80',
       options: [
         { option_name: 'เลือกเนื้อสัตว์', option_value: 'หมูชิ้นนุ่ม', additional_price: 0 },
         { option_name: 'เลือกเนื้อสัตว์', option_value: 'เนื้ออกไก่', additional_price: 0 },

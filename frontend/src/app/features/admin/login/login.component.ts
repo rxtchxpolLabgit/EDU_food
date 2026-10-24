@@ -23,19 +23,22 @@ import { ToastService } from '../../../core/services/toast.service';
           <p class="text-xs text-slate-500">
             EDU Food Order — ระบบจัดการร้านอาหาร ตึกครุศาสตร์
           </p>
+          <p class="text-xs text-slate-600">
+            บัญชีนี้จัดการร้านค้า เมนู เวลาเปิดร้าน และสถานะออร์เดอร์ของทุกร้าน
+          </p>
         </div>
 
-        <!-- Default Credentials Hint -->
+        <!-- Admin account details -->
         <div class="bg-orange-50 border border-orange-200/80 rounded-2xl p-4 text-xs text-slate-700 space-y-1">
           <div class="font-bold text-brand-800 flex items-center gap-1.5">
             <span>🔑</span>
-            <span>ข้อมูลเข้าสู่ระบบเริ่มต้น (สำหรับทดสอบ)</span>
+            <span>บัญชีผู้ดูแลระบบ</span>
           </div>
           <div class="text-[11px] text-slate-600">
             • เบอร์โทรศัพท์: <code class="bg-white px-1.5 py-0.5 rounded border border-orange-200 font-mono font-bold text-brand-700">0812345678</code>
           </div>
           <div class="text-[11px] text-slate-600">
-            • รหัสผ่าน: <code class="bg-white px-1.5 py-0.5 rounded border border-orange-200 font-mono font-bold text-brand-700">Admin&#64;EduFood2026</code>
+            • ใช้รหัสผ่านที่กำหนดไว้ใน <code class="bg-white px-1.5 py-0.5 rounded border border-orange-200 font-mono font-bold text-brand-700">ADMIN_DEFAULT_PASSWORD</code> ในไฟล์ .env
           </div>
         </div>
 
@@ -100,7 +103,7 @@ import { ToastService } from '../../../core/services/toast.service';
 })
 export class AdminLoginComponent {
   phone: string = '0812345678';
-  password: string = 'Admin@EduFood2026';
+  password: string = '';
   isLoading = signal<boolean>(false);
 
   constructor(
