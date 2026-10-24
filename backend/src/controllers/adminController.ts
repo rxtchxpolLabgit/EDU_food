@@ -42,6 +42,7 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
         id: user.id,
         name: user.name,
         role: user.role,
+        restaurant_id: user.restaurant_id ?? null,
       },
       config.jwt.secret,
       { expiresIn: '7d' }
@@ -57,9 +58,69 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
           name: user.name,
           phone: user.phone,
           role: user.role,
+          restaurant_id: user.restaurant_id ?? null,
         },
       },
     });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function restaurantLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const phone = typeof req.body.phone === 'string' ? req.body.phone.replace(/[-\s]/g, '') : '';
+    const { password } = req.body;
+    if (!phone || !password) {
+      res.status(400).json({ success: false, message: 'กรุณากรอกเบอร์โทรศัพท์และรหัสผ่าน' });
+      return;
+    }
+    const user = await db('users').where({ phone, role: 'restaurant' }).first();
+    if (!user || !user.restaurant_id || !(await bcrypt.compare(password, user.password_hash))) {
+      res.status(401).json({ success: false, message: 'เบอร์โทรศัพท์หรือรหัสผ่านไม่ถูกต้อง' });
+      return;
+    }
+    const restaurant = await db('restaurants').where({ id: user.restaurant_id }).first();
+    if (!restaurant) {
+      res.status(401).json({ success: false, message: 'ไม่พบบัญชีร้านค้า กรุณาติดต่อผู้ดูแลระบบ' });
+      return;
+    }
+    const token = jwt.sign({ id: user.id, name: user.name, role: user.role, restaurant_id: user.restaurant_id }, config.jwt.secret, { expiresIn: '7d' });
+    res.json({
+      success: true,
+      message: 'เข้าสู่ระบบร้านค้าสำเร็จ',
+      data: { token, user: { id: user.id, name: user.name, phone: user.phone, role: user.role, restaurant_id: user.restaurant_id, restaurant_name: restaurant.name } },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function setRestaurantAccount(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const restaurantId = Number(req.params.id);
+    const { phone, password, name } = req.body;
+    const cleanPhone = typeof phone === 'string' ? phone.replace(/[-\s]/g, '') : '';
+    const restaurant = await db('restaurants').where({ id: restaurantId }).first();
+    if (!restaurant) {
+      res.status(404).json({ success: false, message: 'ไม่พบร้านอาหาร' });
+      return;
+    }
+    if (!/^0\d{9}$/.test(cleanPhone) || typeof password !== 'string' || password.length < 8) {
+      res.status(400).json({ success: false, message: 'กรุณากรอกเบอร์โทรศัพท์ 10 หลักและรหัสผ่านอย่างน้อย 8 ตัว' });
+      return;
+    }
+    const existing = await db('users').where({ restaurant_id: restaurantId }).first();
+    const phoneOwner = await db('users').where({ phone: cleanPhone }).first();
+    if (phoneOwner && phoneOwner.id !== existing?.id) {
+      res.status(409).json({ success: false, message: 'เบอร์โทรศัพท์นี้ถูกใช้แล้ว' });
+      return;
+    }
+    const accountName = (typeof name === 'string' && name.trim()) || restaurant.name;
+    const values = { name: accountName, phone: cleanPhone, role: 'restaurant', restaurant_id: restaurantId, password_hash: await bcrypt.hash(password, 10) };
+    if (existing) await db('users').where({ id: existing.id }).update(values);
+    else await db('users').insert(values);
+    res.json({ success: true, message: 'บันทึกบัญชีร้านค้าแล้ว', data: { restaurant_id: restaurantId, phone: cleanPhone, name: accountName } });
   } catch (err) {
     next(err);
   }
@@ -179,6 +240,7 @@ export async function getAdminRestaurants(req: AuthenticatedRequest, res: Respon
           is_open: Boolean(r.is_open),
           menu_count: Number(menuCount?.count || 0),
           active_orders_count: Number(activeOrdersCount?.count || 0),
+          account_phone: (await db('users').where({ restaurant_id: r.id }).first())?.phone || null,
         };
       })
     );
@@ -500,6 +562,9 @@ export async function getAdminOrders(req: AuthenticatedRequest, res: Response, n
     if (restaurant_id) {
       query = query.where('orders.restaurant_id', restaurant_id);
     }
+    if (req.user?.role === 'restaurant') {
+      query = query.where('orders.restaurant_id', req.user.restaurant_id);
+    }
 
     if (status && status !== 'all') {
       query = query.where('orders.status', status);
@@ -562,6 +627,10 @@ export async function getAdminOrderById(req: AuthenticatedRequest, res: Response
       res.status(404).json({ success: false, message: 'ไม่พบคำสั่งซื้อ' });
       return;
     }
+    if (req.user?.role === 'restaurant' && order.restaurant_id !== req.user.restaurant_id) {
+      res.status(404).json({ success: false, message: 'ไม่พบคำสั่งซื้อ' });
+      return;
+    }
 
     const restaurant = await db('restaurants').where({ id: order.restaurant_id }).first();
     const items = await db('order_items').where({ order_id: order.id });
@@ -619,7 +688,9 @@ export async function updateOrderStatus(req: AuthenticatedRequest, res: Response
     let previousStatus = '';
     let notFound = false;
     await db.transaction(async (trx) => {
-      const order = await trx('orders').where({ id }).forUpdate().first();
+      let orderQuery = trx('orders').where({ id });
+      if (req.user?.role === 'restaurant') orderQuery = orderQuery.where({ restaurant_id: req.user.restaurant_id });
+      const order = await orderQuery.forUpdate().first();
       if (!order) {
         notFound = true;
         return;

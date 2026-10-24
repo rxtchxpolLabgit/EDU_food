@@ -8,6 +8,7 @@ export interface AuthenticatedUser {
   name: string;
   phone: string;
   role: string;
+  restaurant_id?: number | null;
 }
 
 export interface AuthenticatedRequest extends Request {
@@ -45,6 +46,7 @@ export async function requireAuth(
       name: user.name,
       phone: user.phone,
       role: user.role,
+      restaurant_id: user.restaurant_id ?? null,
     };
     next();
   } catch (err) {
@@ -53,6 +55,18 @@ export async function requireAuth(
       message: 'Session หมดอายุ หรือ Token ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่',
     });
   }
+}
+
+export function requireRestaurant(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void {
+  if (!req.user || req.user.role !== 'restaurant' || !req.user.restaurant_id) {
+    res.status(403).json({ success: false, message: 'บัญชีนี้ไม่มีสิทธิ์เข้าถึงหน้าร้านค้า' });
+    return;
+  }
+  next();
 }
 
 export function requireAdmin(

@@ -35,6 +35,17 @@ export async function up(): Promise<void> {
     console.log('Created table: restaurants');
   }
 
+  // Restaurant staff accounts are scoped to one restaurant. This is additive
+  // so existing databases keep their users and orders during upgrades.
+  if (!(await db.schema.hasColumn('users', 'restaurant_id'))) {
+    await db.schema.alterTable('users', (t) => {
+      t.integer('restaurant_id').unsigned().nullable()
+        .references('id').inTable('restaurants').onDelete('CASCADE');
+      t.unique(['restaurant_id']);
+    });
+    console.log('Added restaurant scope to users');
+  }
+
   // 3. menu_categories
   if (!(await db.schema.hasTable('menu_categories'))) {
     await db.schema.createTable('menu_categories', (t) => {

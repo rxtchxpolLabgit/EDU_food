@@ -8,6 +8,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { restaurantRouter } from './routes/restaurantRoutes';
 import { orderRouter } from './routes/orderRoutes';
 import { adminRouter } from './routes/adminRoutes';
+import { restaurantPortalRouter } from './routes/restaurantPortalRoutes';
 import { uploadsDirectory } from './middleware/upload';
 
 export const app = express();
@@ -42,6 +43,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/restaurants', restaurantRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/restaurant-portal', restaurantPortalRouter);
 
 // 404 Handler
 app.use((req, res) => {

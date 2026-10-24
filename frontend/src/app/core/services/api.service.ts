@@ -10,6 +10,7 @@ import {
   MenuCategory,
 } from '../models/food.models';
 import { AuthService } from './auth.service';
+import { RestaurantAuthService } from './restaurant-auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class ApiService {
     ? 'http://localhost:5000/api'
     : '/api';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService, private restaurantAuth: RestaurantAuthService) {}
 
   // --- Public APIs ---
 
@@ -121,6 +122,12 @@ export class ApiService {
     );
   }
 
+  setRestaurantAccount(id: number, data: { phone: string; password: string; name?: string }): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/admin/restaurants/${id}/account`, data, {
+      headers: this.authService.getAuthHeaders(),
+    });
+  }
+
   toggleRestaurantStatus(id: number): Observable<{ success: boolean; message?: string; data: { id: number; is_open: boolean } }> {
     return this.http.patch<any>(
       `${this.baseUrl}/admin/restaurants/${id}/status`,
@@ -214,5 +221,16 @@ export class ApiService {
       { status, cancel_reason, note },
       { headers: this.authService.getAuthHeaders() }
     );
+  }
+
+  getShopOrders(filters?: { status?: string; date?: string }): Observable<{ success: boolean; data: Order[] }> {
+    let params = new HttpParams();
+    if (filters?.status && filters.status !== 'all') params = params.set('status', filters.status);
+    if (filters?.date) params = params.set('date', filters.date);
+    return this.http.get<any>(`${this.baseUrl}/restaurant-portal/orders`, { params, headers: this.restaurantAuth.headers() });
+  }
+
+  updateShopOrderStatus(id: number, status: string, cancel_reason?: string): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}/restaurant-portal/orders/${id}/status`, { status, cancel_reason }, { headers: this.restaurantAuth.headers() });
   }
 }

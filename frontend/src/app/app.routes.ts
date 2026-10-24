@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './core/guards/admin.guard';
+import { restaurantGuard } from './core/guards/restaurant.guard';
 
 export const routes: Routes = [
   // User Routes
@@ -97,6 +98,17 @@ export const routes: Routes = [
         title: 'จัดการคำสั่งซื้อ — EDU Food Order Admin',
       },
     ],
+  },
+  {
+    path: 'shop/login',
+    loadComponent: () => import('./features/shop/shop-login.component').then((m) => m.ShopLoginComponent),
+    title: 'เข้าสู่ระบบร้านค้า — EDU Food Order',
+  },
+  {
+    path: 'shop/orders',
+    loadComponent: () => import('./features/shop/shop-orders.component').then((m) => m.ShopOrdersComponent),
+    canActivate: [restaurantGuard],
+    title: 'รับออร์เดอร์ร้านค้า — EDU Food Order',
   },
 
   // Fallback

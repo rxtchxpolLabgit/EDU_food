@@ -12,6 +12,7 @@ export interface Restaurant {
   max_orders_per_slot: number;
   menu_count?: number;
   active_orders_count?: number;
+  account_phone?: string | null;
 }
 
 export interface MenuCategory {

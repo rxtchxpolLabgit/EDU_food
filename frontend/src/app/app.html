@@ -2,7 +2,7 @@
 <app-toast></app-toast>
 
 <!-- User Navbar (shown when not in admin layout) -->
-@if (!isAdminRoute()) {
+@if (!isPortalRoute()) {
   <app-navbar></app-navbar>
 }
 
@@ -12,6 +12,6 @@
 </div>
 
 <!-- User Footer (shown when not in admin layout) -->
-@if (!isAdminRoute()) {
+@if (!isPortalRoute()) {
   <app-footer></app-footer>
 }

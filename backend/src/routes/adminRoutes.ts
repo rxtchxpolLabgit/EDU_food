@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   login,
+  setRestaurantAccount,
   getDashboardStats,
   getAdminRestaurants,
   createRestaurant,
@@ -43,6 +44,7 @@ adminRouter.get('/dashboard', getDashboardStats);
 adminRouter.get('/restaurants', getAdminRestaurants);
 adminRouter.post('/restaurants', createRestaurant);
 adminRouter.put('/restaurants/:id', updateRestaurant);
+adminRouter.put('/restaurants/:id/account', setRestaurantAccount);
 adminRouter.patch('/restaurants/:id/status', toggleRestaurantStatus);
 adminRouter.get('/restaurants/:id/menu', getRestaurantMenu);
 adminRouter.post('/restaurants/:id/menu', createMenuItem);

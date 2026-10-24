@@ -238,9 +238,15 @@ Base URL:
 ```json
 {
   "phone": "0812345678",
-  "password": "Admin@EduFood2026"
+  "password": "<ค่าจาก ADMIN_DEFAULT_PASSWORD ใน .env>"
 }
 ```
+
+### 2.1.1 กำหนดบัญชีเข้าใช้งานให้ร้านค้า `(Protected)`
+- **Endpoint**: `PUT /api/admin/restaurants/:id/account`
+- **Request Body**: `{ "phone": "0812345679", "password": "รหัสผ่านอย่างน้อย 8 ตัว" }`
+- Admin กำหนดได้หนึ่งบัญชีต่อร้าน เบอร์โทรศัพท์ต้องไม่ซ้ำกับบัญชีอื่น
+
 - **Response `200 OK`**:
 ```json
 {
@@ -322,3 +328,12 @@ Base URL:
 }
 ```
 *(สถานะที่รองรับ: `รอร้านรับออร์เดอร์`, `ร้านรับออร์เดอร์แล้ว`, `กำลังเตรียมอาหาร`, `พร้อมรับอาหาร`, `รับอาหารแล้ว`, `ยกเลิก`)*
+
+---
+
+## 3. Restaurant Portal Endpoints (สำหรับบัญชีร้านค้า)
+- **เข้าสู่ระบบ**: `POST /api/restaurant-portal/auth/login` ด้วยเบอร์และรหัสผ่านที่ Admin ตั้งไว้
+- **ดูออร์เดอร์ของร้านตนเอง**: `GET /api/restaurant-portal/orders` `(Protected)`
+- **ดูรายละเอียดออร์เดอร์**: `GET /api/restaurant-portal/orders/:id` `(Protected)`
+- **เปลี่ยนสถานะออร์เดอร์**: `PATCH /api/restaurant-portal/orders/:id/status` `(Protected)`
+- ร้านค้าเห็นและเปลี่ยนสถานะได้เฉพาะออร์เดอร์ที่ผูกกับร้านของบัญชีนั้น

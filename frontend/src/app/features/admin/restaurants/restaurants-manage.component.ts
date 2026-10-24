@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Restaurant } from '../../../core/models/food.models';
@@ -8,7 +9,7 @@ import { Restaurant } from '../../../core/models/food.models';
 @Component({
   selector: 'app-restaurants-manage',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -97,6 +98,16 @@ import { Restaurant } from '../../../core/models/food.models';
 
             <!-- Footer Action -->
             <div class="p-5 pt-0 border-t border-slate-100 mt-2">
+              <div class="mb-3 flex items-center justify-between gap-2 rounded-xl bg-indigo-50 px-3 py-2 text-[11px]">
+                <span class="text-slate-600">บัญชีร้าน: {{ rest.account_phone || 'ยังไม่ได้ตั้งค่า' }}</span>
+                <a routerLink="/shop/login" class="text-indigo-700 font-semibold">หน้าเข้าร้าน</a>
+              </div>
+              <button
+                (click)="openAccountModal(rest)"
+                class="w-full mb-2 py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition cursor-pointer"
+              >
+                ตั้งค่าบัญชีและรหัสผ่านร้าน
+              </button>
               <button
                 (click)="openEditModal(rest)"
                 class="w-full py-2.5 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
@@ -258,6 +269,26 @@ import { Restaurant } from '../../../core/models/food.models';
           </div>
         </div>
       }
+      @if (accountRestaurant()) {
+        <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+          <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl">
+            <h3 class="font-heading font-bold text-lg text-slate-900">บัญชีร้าน {{ accountRestaurant()!.name }}</h3>
+            <p class="mt-1 mb-5 text-xs text-slate-500">ร้านจะเห็นและจัดการออร์เดอร์ของร้านตัวเองเท่านั้น</p>
+            <form (ngSubmit)="saveRestaurantAccount()" class="space-y-4">
+              <label class="block text-xs font-semibold text-slate-700">เบอร์โทรศัพท์เข้าระบบ
+                <input type="tel" [(ngModel)]="accountPhone" name="accountPhone" required pattern="0[0-9]{9}" class="mt-1 w-full px-3 py-2.5 rounded-xl border bg-slate-50" placeholder="08xxxxxxxx" />
+              </label>
+              <label class="block text-xs font-semibold text-slate-700">รหัสผ่านใหม่ (อย่างน้อย 8 ตัว)
+                <input type="password" [(ngModel)]="accountPassword" name="accountPassword" required minlength="8" class="mt-1 w-full px-3 py-2.5 rounded-xl border bg-slate-50" />
+              </label>
+              <div class="flex justify-end gap-2 pt-2">
+                <button type="button" (click)="accountRestaurant.set(null)" class="px-4 py-2 rounded-xl border text-xs">ยกเลิก</button>
+                <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold">บันทึกบัญชีร้าน</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
     </div>
   `,
 })
@@ -267,6 +298,9 @@ export class RestaurantsManageComponent implements OnInit {
   showModal = signal<boolean>(false);
   modalIsEdit: boolean = false;
   activeId: number | null = null;
+  accountRestaurant = signal<Restaurant | null>(null);
+  accountPhone = '';
+  accountPassword = '';
 
   formModel: any = {
     name: '',
@@ -324,6 +358,25 @@ export class RestaurantsManageComponent implements OnInit {
       max_orders_per_slot: 10,
     };
     this.showModal.set(true);
+  }
+
+  openAccountModal(rest: Restaurant) {
+    this.accountRestaurant.set(rest);
+    this.accountPhone = rest.account_phone || '';
+    this.accountPassword = '';
+  }
+
+  saveRestaurantAccount() {
+    const rest = this.accountRestaurant();
+    if (!rest) return;
+    this.apiService.setRestaurantAccount(rest.id, { phone: this.accountPhone, password: this.accountPassword }).subscribe({
+      next: (res) => {
+        this.toastService.success(res.message || 'บันทึกบัญชีร้านแล้ว');
+        this.accountRestaurant.set(null);
+        this.fetchRestaurants();
+      },
+      error: (err) => this.toastService.error(err.error?.message || 'บันทึกบัญชีร้านไม่สำเร็จ'),
+    });
   }
 
   openEditModal(rest: Restaurant) {

@@ -52,7 +52,8 @@ import { RouterModule } from '@angular/router';
             <div class="flex flex-col space-y-2 text-xs">
               <a routerLink="/" class="hover:text-white transition">หน้าหลักสั่งอาหาร</a>
               <a routerLink="/track" class="hover:text-white transition">ตรวจสอบสถานะคำสั่งซื้อ</a>
-              <a routerLink="/admin/login" class="hover:text-white transition">ระบบจัดการสำหรับร้านค้า (Admin Portal)</a>
+              <a routerLink="/shop/login" class="hover:text-white transition">เข้าสู่ระบบร้านค้าเพื่อรับออร์เดอร์</a>
+              <a routerLink="/admin/login" class="hover:text-white transition">เข้าสู่ระบบผู้ดูแล (Admin)</a>
             </div>
           </div>
         </div>
