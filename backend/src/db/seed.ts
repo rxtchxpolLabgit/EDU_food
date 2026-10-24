@@ -17,7 +17,7 @@ export async function seed(): Promise<void> {
       role: 'admin',
       password_hash: passwordHash,
     });
-    console.log(`Seeded admin user (phone: ${adminPhone}, pass: ${config.adminDefaultPassword})`);
+    console.log(`Seeded admin user (phone: ${adminPhone}). Password is configured through ADMIN_DEFAULT_PASSWORD.`);
   } else {
     await db('users').where({ phone: adminPhone }).update({
       password_hash: passwordHash,
