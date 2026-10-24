@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Restaurant, MenuItem, MenuCategory, MenuOption } from '../../../core/models/food.models';
+import { isPagesApiMissing } from '../../../core/config/api-url';
 
 @Component({
   selector: 'app-menu-manage',
@@ -213,7 +214,7 @@ import { Restaurant, MenuItem, MenuCategory, MenuOption } from '../../../core/mo
                   />
                   <label class="mt-2 flex cursor-pointer items-center gap-2 text-xs font-semibold text-brand-700">
                     <input type="file" accept="image/jpeg,image/png,image/webp" (change)="uploadImage($event)" [disabled]="uploadingImage()" class="max-w-full text-xs" />
-                    {{ uploadingImage() ? 'กำลังอัปโหลด…' : 'หรือเลือกภาพจากเครื่อง (JPG, PNG, WEBP ไม่เกิน 5 MB)' }}
+                    {{ uploadingImage() ? 'กำลังบันทึก…' : 'หรือเลือกภาพจากเครื่อง (JPG, PNG, WEBP ไม่เกิน ' + (localDemoMode ? '1' : '5') + ' MB)' }}
                   </label>
                 </div>
               </div>
@@ -362,6 +363,7 @@ import { Restaurant, MenuItem, MenuCategory, MenuOption } from '../../../core/mo
   `,
 })
 export class MenuManageComponent implements OnInit {
+  localDemoMode = isPagesApiMissing();
   restaurants = signal<Restaurant[]>([]);
   categories = signal<MenuCategory[]>([]);
   menuItems = signal<MenuItem[]>([]);
@@ -500,6 +502,11 @@ export class MenuManageComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
+    if (this.localDemoMode && file.size > 1_000_000) {
+      this.toastService.error('โหมดนี้บันทึกรูปในเบราว์เซอร์ได้ไม่เกิน 1 MB');
+      input.value = '';
+      return;
+    }
     this.uploadingImage.set(true);
     this.apiService.uploadImage(file).subscribe({
       next: (res) => {
