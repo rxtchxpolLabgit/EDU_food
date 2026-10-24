@@ -2,6 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { getApiBaseUrl } from '../config/api-url';
 
 export interface AdminUser {
   id: number;
@@ -14,9 +15,7 @@ export interface AdminUser {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = typeof window !== 'undefined' && window.location.port === '4200'
-    ? 'http://localhost:5000/api/admin'
-    : '/api/admin';
+  private apiUrl = `${getApiBaseUrl()}/admin`;
   private tokenKey = 'edu_food_admin_token';
   private userKey = 'edu_food_admin_user';
 

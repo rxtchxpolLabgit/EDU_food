@@ -2,6 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { getApiBaseUrl } from '../config/api-url';
 
 export interface RestaurantAccount {
   id: number;
@@ -14,7 +15,7 @@ export interface RestaurantAccount {
 
 @Injectable({ providedIn: 'root' })
 export class RestaurantAuthService {
-  private baseUrl = typeof window !== 'undefined' && window.location.port === '4200' ? 'http://localhost:5000/api' : '/api';
+  private baseUrl = getApiBaseUrl();
   private tokenKey = 'edu_food_restaurant_token';
   private userKey = 'edu_food_restaurant_user';
   currentUser = signal<RestaurantAccount | null>(null);

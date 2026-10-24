@@ -11,14 +11,13 @@ import {
 } from '../models/food.models';
 import { AuthService } from './auth.service';
 import { RestaurantAuthService } from './restaurant-auth.service';
+import { getApiBaseUrl } from '../config/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = typeof window !== 'undefined' && window.location.port === '4200'
-    ? 'http://localhost:5000/api'
-    : '/api';
+  private baseUrl = getApiBaseUrl();
 
   constructor(private http: HttpClient, private authService: AuthService, private restaurantAuth: RestaurantAuthService) {}
 

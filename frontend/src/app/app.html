@@ -1,6 +1,12 @@
 <!-- Global Toast Notifications -->
 <app-toast></app-toast>
 
+@if (pagesApiMissing) {
+  <div class="bg-amber-100 border-b border-amber-300 px-4 py-3 text-center text-xs text-amber-950">
+    หน้าเว็บ GitHub Pages ยังไม่ได้เชื่อม API จึงยังสั่งอาหารหรือจัดการออร์เดอร์ไม่ได้
+  </div>
+}
+
 <!-- User Navbar (shown when not in admin layout) -->
 @if (!isPortalRoute()) {
   <app-navbar></app-navbar>

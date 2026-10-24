@@ -146,6 +146,10 @@ Production Compose เปิดออกอินเทอร์เน็ตเ�
 
 ส่งลิงก์ [GitHub repository](https://github.com/rxtchxpolLabgit/EDU_food) ให้ผู้ร่วมงานได้เลย ทุกคนสามารถดูและ fork โปรเจกต์สาธารณะนี้ได้ ([GitHub public repositories](https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories)).
 
+### เปิดหน้าเว็บผ่าน GitHub Pages
+
+GitHub Actions จะ build และ publish หน้า Angular ที่ `https://rxtchxpollabgit.github.io/EDU_food/` เมื่อ push เข้า `main` หากต้องการให้ระบบสั่งซื้อและ Admin ทำงานด้วย ให้เพิ่ม Repository variable ชื่อ `API_BASE_URL` ใน **Settings > Secrets and variables > Actions > Variables** โดยใส่ URL API สาธารณะ เช่น `https://api.example.com/api` และตั้ง `CORS_ORIGIN` ที่ backend เป็น `https://rxtchxpollabgit.github.io` จากนั้นรัน workflow `Publish GitHub Pages` อีกครั้ง หากยังไม่มี `API_BASE_URL` เว็บจะแสดงข้อความแจ้งว่ายังไม่ได้เชื่อม API
+
 ---
 
 ### วิธีที่ 2: รันในเครื่องสำหรับ Local Development (Zero-setup)

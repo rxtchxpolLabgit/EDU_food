@@ -5,6 +5,7 @@ import { filter } from 'rxjs';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
+import { isPagesApiMissing } from './core/config/api-url';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
 })
 export class App {
   isPortalRoute = signal(false);
+  pagesApiMissing = isPagesApiMissing();
 
   constructor(public router: Router) {
     this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event) => {
