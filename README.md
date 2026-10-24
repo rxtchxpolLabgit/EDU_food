@@ -102,20 +102,49 @@
 
 ---
 
-### วิธีที่ 1: รันด้วย Docker Compose (แนะนำสำหรับ Production)
+### วิธีที่ 1: รันในเครื่องด้วย Docker Compose (แนะนำ)
 
-คัดลอก `.env.example` เป็น `.env` แล้วกำหนดรหัสผ่านฐานข้อมูล, JWT secret (อย่างน้อย 32 ตัวอักษร) และรหัสผ่าน Admin ที่ไม่ซ้ำ จากนั้นรัน:
+ติดตั้ง [Docker Desktop](https://www.docker.com/products/docker-desktop/) แล้วสร้างรหัสผ่านลับสำหรับเครื่องนี้:
 
-```bash
-cp .env.example .env
-docker compose up --build
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-env.ps1
+docker compose up --build -d
 ```
 
-บน PowerShell ใช้ `Copy-Item .env.example .env` แทน `cp` ได้
+บน macOS/Linux ใช้ `sh scripts/setup-env.sh` แทนคำสั่งสร้าง `.env` ด้านบน
 
 - **Frontend (Web Application)**: เข้าใช้งานได้ที่ [http://localhost](http://localhost)
 - **Backend API**: เข้าใช้งานได้ที่ [http://localhost:5000/api](http://localhost:5000/api)
 - ระบบจะสร้างฐานข้อมูล PostgreSQL, รัน Migration และสร้างข้อมูลตั้งต้น 3 ร้านให้อัตโนมัติ
+- สคริปต์จะแสดงเบอร์และรหัสผ่าน Admin ครั้งแรก เก็บรหัสผ่านไว้เป็นความลับ และอย่าอัปโหลด `.env` ขึ้น GitHub
+
+### วิธีที่ 2: เปิดให้คนอื่นใช้งานผ่านอินเทอร์เน็ต
+
+GitHub repository นี้เป็นสาธารณะเพื่อให้คนอื่นดูและ fork โค้ดได้ แต่ GitHub ไม่ได้เปิดใช้ backend และฐานข้อมูลให้โดยอัตโนมัติ; GitHub Pages รองรับเว็บแบบ static และไม่รัน backend ของระบบนี้ ([ข้อจำกัดของ GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)). การเปิดใช้จริงต้องมี Linux VPS/เซิร์ฟเวอร์ที่ติดตั้ง Docker และโดเมนที่ชี้มายังเซิร์ฟเวอร์
+
+1. เปิดพอร์ต `80` และ `443` ที่ firewall ของเซิร์ฟเวอร์ และตั้ง DNS `A` record ของโดเมนไปยัง IP เซิร์ฟเวอร์
+2. Clone repository แล้วสร้าง secrets:
+
+   ```bash
+   git clone https://github.com/rxtchxpolLabgit/EDU_food.git
+   cd EDU_food
+   sh scripts/setup-env.sh
+   ```
+
+3. แก้ `.env` ให้ `DOMAIN=your-domain.example` และ `CORS_ORIGIN=https://your-domain.example` โดยใช้โดเมนจริงของคุณ
+4. เริ่มบริการผ่าน Compose สำหรับ production:
+
+   ```bash
+   docker compose -f docker-compose.prod.yml up --build -d
+   ```
+
+5. เข้า `https://your-domain.example` แล้วเข้าสู่ระบบ Admin ด้วยเบอร์ `0812345678` และรหัสผ่านที่สคริปต์สร้าง จากหน้า Admin > จัดการร้านอาหาร ให้ตั้งบัญชีแยกของแต่ละร้าน
+
+Production Compose เปิดออกอินเทอร์เน็ตเฉพาะหน้าเว็บและ HTTPS; API และ PostgreSQL อยู่ในเครือข่ายภายใน Docker ส่วน Caddy ขอและต่ออายุใบรับรอง HTTPS ให้อัตโนมัติเมื่อ DNS และพอร์ตถูกต้อง
+
+### แชร์โค้ด
+
+ส่งลิงก์ [GitHub repository](https://github.com/rxtchxpolLabgit/EDU_food) ให้ผู้ร่วมงานได้เลย ทุกคนสามารถดูและ fork โปรเจกต์สาธารณะนี้ได้ ([GitHub public repositories](https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories)).
 
 ---
 
