@@ -45,6 +45,8 @@ export class RestaurantAuthService {
         this.currentUser.set(res.data.user);
         localStorage.setItem(this.tokenKey, res.data.token);
         localStorage.setItem(this.userKey, JSON.stringify(res.data.user));
+        localStorage.setItem('edu_food_restaurant_user_phone', res.data.user.phone);
+        localStorage.setItem('edu_food_restaurant_id', String(res.data.user.restaurant_id));
       }
     }));
   }
@@ -64,6 +66,8 @@ export class RestaurantAuthService {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(this.tokenKey);
       localStorage.removeItem(this.userKey);
+      localStorage.removeItem('edu_food_restaurant_user_phone');
+      localStorage.removeItem('edu_food_restaurant_id');
     }
   }
 }

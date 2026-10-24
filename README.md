@@ -148,7 +148,7 @@ Production Compose เปิดออกอินเทอร์เน็ตเ�
 
 ### เปิดหน้าเว็บผ่าน GitHub Pages
 
-GitHub Actions จะ build และ publish หน้า Angular ที่ `https://rxtchxpollabgit.github.io/EDU_food/` เมื่อ push เข้า `main` หากต้องการให้ระบบสั่งซื้อและ Admin ทำงานด้วย ให้เพิ่ม Repository variable ชื่อ `API_BASE_URL` ใน **Settings > Secrets and variables > Actions > Variables** โดยใส่ URL API สาธารณะ เช่น `https://api.example.com/api` และตั้ง `CORS_ORIGIN` ที่ backend เป็น `https://rxtchxpollabgit.github.io` จากนั้นรัน workflow `Publish GitHub Pages` อีกครั้ง หากยังไม่มี `API_BASE_URL` เว็บจะแสดงข้อความแจ้งว่ายังไม่ได้เชื่อม API
+ GitHub Actions จะ build และ publish หน้า Angular ที่ `https://rxtchxpollabgit.github.io/EDU_food/` เมื่อ push เข้า `main` หากไม่มี `API_BASE_URL` หน้าเว็บจะเข้าโหมดทดลองในเบราว์เซอร์โดยอัตโนมัติ: มีร้านและเมนูตัวอย่าง สั่งซื้อ ติดตามสถานะ จัดการเมนู/ร้าน และแยกบัญชีร้านได้ ข้อมูลและบัญชีจะอยู่ในเบราว์เซอร์ของผู้ใช้แต่ละคนเท่านั้น จึงไม่แชร์ข้ามเครื่องหรือเห็นออร์เดอร์ของผู้อื่น บัญชี Admin โหมดทดลองคือ `0812345678` / `Admin@EduFood2026` สำหรับระบบหลายผู้ใช้ที่แชร์ออร์เดอร์กัน ให้เพิ่ม Repository variable `API_BASE_URL` และเชื่อม backend สาธารณะตามขั้นตอนด้านบน
 
 ---
 

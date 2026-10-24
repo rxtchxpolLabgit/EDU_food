@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { isPagesApiMissing } from '../../../core/config/api-url';
 
 @Component({
   selector: 'app-admin-login',
@@ -37,9 +38,14 @@ import { ToastService } from '../../../core/services/toast.service';
           <div class="text-[11px] text-slate-600">
             • เบอร์โทรศัพท์: <code class="bg-white px-1.5 py-0.5 rounded border border-orange-200 font-mono font-bold text-brand-700">0812345678</code>
           </div>
-          <div class="text-[11px] text-slate-600">
-            • ใช้รหัสผ่านที่กำหนดไว้ใน <code class="bg-white px-1.5 py-0.5 rounded border border-orange-200 font-mono font-bold text-brand-700">ADMIN_DEFAULT_PASSWORD</code> ในไฟล์ .env
-          </div>
+          @if (localDemoMode) {
+            <div class="text-[11px] text-slate-600">• รหัสผ่านโหมดนี้: <code class="bg-white px-1.5 py-0.5 rounded border border-orange-200 font-mono font-bold text-brand-700">Admin@EduFood2026</code></div>
+            <div class="text-[10px] text-amber-800">บัญชีนี้ใช้เฉพาะโหมดตัวอย่างในเบราว์เซอร์ของคุณ</div>
+          } @else {
+            <div class="text-[11px] text-slate-600">
+              • ใช้รหัสผ่านที่กำหนดไว้ใน <code class="bg-white px-1.5 py-0.5 rounded border border-orange-200 font-mono font-bold text-brand-700">ADMIN_DEFAULT_PASSWORD</code> ในไฟล์ .env
+            </div>
+          }
         </div>
 
         <!-- Login Form -->
@@ -102,6 +108,7 @@ import { ToastService } from '../../../core/services/toast.service';
   `,
 })
 export class AdminLoginComponent {
+  localDemoMode = isPagesApiMissing();
   phone: string = '0812345678';
   password: string = '';
   isLoading = signal<boolean>(false);
