@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.angular/
+.env
+.env.*
+!.env.example
+backend/edu_food.sqlite
+backend/edu_food.sqlite-*
+backend/uploads/

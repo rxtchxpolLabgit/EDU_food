@@ -1,0 +1,17 @@
+<!-- Global Toast Notifications -->
+<app-toast></app-toast>
+
+<!-- User Navbar (shown when not in admin layout) -->
+@if (!isAdminRoute()) {
+  <app-navbar></app-navbar>
+}
+
+<!-- Main Router Content -->
+<div class="flex-1">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- User Footer (shown when not in admin layout) -->
+@if (!isAdminRoute()) {
+  <app-footer></app-footer>
+}
